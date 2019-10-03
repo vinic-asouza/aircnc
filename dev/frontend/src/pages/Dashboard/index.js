@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import api from '../../services/api'
 
-// import { Container } from './styles';
+import './style.css'
 
 export default function Dashboard() {
+    const [spots, setSpots] = useState([])
 
     useEffect(() => {
         async function loadSpot() {
@@ -12,12 +13,22 @@ export default function Dashboard() {
                 headers: { user_id }
             });
 
-            console.log(response.data)
+            setSpots(response.data)
         }
         loadSpot();
     }, []);
 
     return (
-        <div />
+        <>
+            <ul className="spot-list">
+                {spots.map(spot => (
+                    <li key={spot._id}>
+                        <header style={ { backgroundImage: `url(${spot.thumbnail_url})` } } />
+                        <strong>{spot.company}</strong>
+                        <span>{spot.price ? `R$${spot.price}/dia` : 'Gratuito'}</span>
+                    </li>
+                ))}
+            </ul>
+        </>
     );
 }
